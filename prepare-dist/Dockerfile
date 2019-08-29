@@ -9,7 +9,7 @@ LABEL "com.github.actions.description"="rsync this directory into the build/dist
 LABEL "com.github.actions.icon"="server"
 LABEL "com.github.actions.color"="orange"
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y &&\
   rm -Rf /var/lib/apt/lists/*
 
 

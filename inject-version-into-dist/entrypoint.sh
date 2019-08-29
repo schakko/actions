@@ -17,9 +17,13 @@ if [ -e $DIST_DIRECTORY ] && [ -e $GIT_META_DIRECTORY ]; then
 		echo "Checking meta information in $path"
 
 		key=`basename $path`
+		echo "2"
 		marker="\${git:$key}"
+		echo "3"
 		value=`cat $path`
+		echo "4"
 		echo "Replacing $marker with '$value' in $DIST_DIRECTORY ..."
+		echo "5"
 		grep -RiIl "$marker" $DIST_DIRECTORY | xargs sed -i "s/$marker/$value/g"
 	done
 else

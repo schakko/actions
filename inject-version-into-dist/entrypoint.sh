@@ -19,6 +19,7 @@ if [ -e $DIST_DIRECTORY ] && [ -e $GIT_META_DIRECTORY ]; then
 		key=`basename $path`
 		marker="\${git:$key}"
 		value=`cat $path`
+		
 		echo "Replacing $marker with '$value' in $DIST_DIRECTORY if existing ..."
 		grep -RiIl "$marker" $DIST_DIRECTORY | xargs -r sed -i "s/$marker/$value/g"
 	done

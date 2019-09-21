@@ -11,15 +11,15 @@ Use the following inside your workflow:
     - name: Write meta information
       uses: schakko/actions/upload-to-dm@master
 	    env:
-		  dlm_endpoint: "https://your-server/wp-json/download-monitor-release-version/v1/downloads/${YOUR_DOWNLOAD_ID}/release"
-		  username: ${{ secrets.dlm_username }}
-		  password: ${{ secrets.dlm_password }}
+		  DLM_ENDPOINT: "https://your-server/wp-json/download-monitor-release-version/v1/downloads/${YOUR_DOWNLOAD_ID}/release"
+		  USERNAME: ${{ secrets.dlm_username }}
+		  PASSWORD: ${{ secrets.dlm_password }}
 		  
 With this, the DLM download artifact with ID *${YOUR_DOWNLOAD_ID}* will be updated with the version information from *.git-meta/version*.
 
 ## Update URL and meta information
 
-If you want e.g. to store your artifact in S3 and need to update the URL inside WordPress DLM, you can use the *artifact_url_source_file* environment variable. In addition to that, *artifact_meta_source_file* can be used as environment variable to define additional meta information.
+If you want e.g. to store your artifact in S3 and need to update the URL inside WordPress DLM, you can use the *ARTIFACT_URL_SOURCE_FILE* environment variable. In addition to that, *ARTIFACT_META_SOURCE_FILE* can be used as environment variable to define additional meta information.
 
 	- name: Write URL source file
 	  run: "echo s3://dlm-artifacts/`cat .git-meta/version`/release.zip > ./artifact_s3_upload_url"
@@ -37,8 +37,8 @@ If you want e.g. to store your artifact in S3 and need to update the URL inside 
     - name: Write meta information
       uses: schakko/actions/upload-to-dm@master
 	    env:
-		  dlm_endpoint: "https://your-server/wp-json/download-monitor-release-version/v1/downloads/${YOUR_DOWNLOAD_ID}/release"
-		  artifact_url_source_file: "./artifact_s3_upload_url"
-		  artifact_meta_source_file: "./artifact_meta_information"
-		  username: ${{ secrets.dlm_username }}
-		  password: ${{ secrets.dlm_password }}
+		  DLM_ENDPOINT: "https://your-server/wp-json/download-monitor-release-version/v1/downloads/${YOUR_DOWNLOAD_ID}/release"
+		  ARTIFACT_URL_SOURCE_FILE: "./artifact_s3_upload_url"
+		  ARTIFACT_META_SOURCE_FILE: "./artifact_meta_information"
+		  USERNAME: ${{ secrets.dlm_username }}
+		  PASSWORD: ${{ secrets.dlm_password }}

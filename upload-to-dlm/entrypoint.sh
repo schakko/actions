@@ -4,8 +4,8 @@
 set -e
 GIT_META_DIRECTORY=".git-meta"
 
-if [ -z "${DLM_ENDPOINT+x}" ]; then
-	echo "You have to provide the \$DLM_ENDPOINT variable. Which has to point to https://your-server/wp-json/download-monitor-release-version/v1/downloads/\${YOUR_ID}/release"
+if [ -z ${DLM_ENDPOINT+x} ]; then
+	echo "You have to provide the \$DLM_ENDPOINT variable, which has to point to https://your-server/wp-json/download-monitor-release-version/v1/downloads/\${YOUR_ID}/release"
 	exit 1
 fi
 
@@ -18,7 +18,7 @@ fi
 VERSION=`cat $GIT_META_VERSION_FILE`
 
 # extract source URL for artifact
-if [ -z "${ARTIFACT_URL_SOURCE_FILE+x}" ]; then
+if [ -z ${ARTIFACT_URL_SOURCE_FILE+x} ]; then
 	URL_ATTRIBUTE=""
 else
 	URL_CONTENT=`cat ${ARTIFACT_URL_SOURCE_FILE}`
@@ -26,7 +26,7 @@ else
 fi
 
 # extract meta information; this must be provided as a valid JSON object
-if [ -z "${ARTIFACT_META_SOURCE_FILE+x}" ]; then
+if [ -z ${ARTIFACT_META_SOURCE_FILE+x} ]; then
 	META_ATTRIBUTE=""
 else
 	META_CONTENT=`cat ${ARTIFACT_META_SOURCE_FILE}`

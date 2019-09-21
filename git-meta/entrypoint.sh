@@ -6,7 +6,13 @@ set -e
 GIT_META_DIRECTORY=".git-meta"
 mkdir -p $GIT_META_DIRECTORY
 
-echo `git rev-parse HEAD` > $GIT_META_DIRECTORY/hash
+META_FILE_HASH=$GIT_META_DIRECTORY/hash
+META_FILE_BRANCH=$GIT_META_DIRECTORY/branch
+META_FILE_MESSAGE_SHORT=$GIT_META_DIRECTORY/message_short
+META_FILE_TAG=$GIT_META_DIRECTORY/tag
+META_FILE_VERSION=$GIT_META_DIRECTORY/version
+
+echo `git rev-parse HEAD` > $META_FILE_HASH
 
 BRANCH_INFO=`git status -b -s`
 
@@ -16,10 +22,10 @@ if [ ! -z "$GITHUB_REF" ]; then
 fi
 # get the last part of of the branch info (e.g. "master...origin/master" for git status or "refs/heads/master") and extract the last portion
 # @see https://stackoverflow.com/a/22727211
-echo `echo $BRANCH_INFO | rev | cut -d'/' -f 1 | rev` > $GIT_META_DIRECTORY/branch
+echo `echo $BRANCH_INFO | rev | cut -d'/' -f 1 | rev` > $META_FILE_BRANCH
 
 GIT_LAST_MESSAGE=$(git log -1 --pretty=oneline)
-echo $GIT_LAST_MESSAGE > $GIT_META_DIRECTORY/message_short
+echo $GIT_LAST_MESSAGE > $META_FILE_MESSAGE_SHORT
 
 GIT_LAST_TAG_COMMIT=`git rev-list --tags --max-count=1`
 
@@ -31,6 +37,14 @@ else
 
 	if [ "$GIT_LAST_TAG_COMMIT" == "$GIT_LAST_COMMIT" ]; then
 		echo "This is a tag commit with tag $GIT_LAST_TAG"
-		echo $GIT_LAST_TAG > $GIT_META_DIRECTORY/tag
+		echo $GIT_LAST_TAG > $META_FILE_TAG
 	fi
+fi
+
+# prefer the tag as version information
+if [ -e $META_FILE_TAG ]; then
+	cp $META_FILE_TAG $META_FILE_VERSION
+else
+	# fall back to branch's name
+	cp $META_FILE_BRANCH $META_FILE_VERSION
 fi

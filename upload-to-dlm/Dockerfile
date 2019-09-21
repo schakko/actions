@@ -9,7 +9,7 @@ LABEL "com.github.actions.description"="Releases a new version in WordPress' Dow
 LABEL "com.github.actions.icon"="server"
 LABEL "com.github.actions.color"="orange"
 
-RUN apt-get update && apt-get install -y &&\
+RUN apt-get update && apt-get install -y curl &&\
   rm -Rf /var/lib/apt/lists/*
 
 

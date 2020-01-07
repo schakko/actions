@@ -19,6 +19,8 @@ META_FILE_IS_TAG=$GIT_META_DIRECTORY/is_tag
 META_FILE_TAG=$GIT_META_DIRECTORY/tag
 # .git-meta/version
 META_FILE_VERSION=$GIT_META_DIRECTORY/version
+# .git-meta/full-version, contains "#${hash}" or "${tag} (#${hash})"
+META_FILE_FULL_VERSION=$GIT_META_DIRECTORY/full_version
 
 # extract commit hash
 printf `git rev-parse HEAD` > $META_FILE_HASH
@@ -41,6 +43,8 @@ printf $GIT_LAST_MESSAGE > $META_FILE_MESSAGE_SHORT
 
 # identify if *this* commit is the latest commit and the latests commit has a tag assigned
 GIT_LAST_TAG_COMMIT=`git rev-list --tags --max-count=1`
+GIT_FULL_VERSION="#${META_FILE_HASH}"
+
 # by default, we assume that we are not in a tag commit
 IS_TAG_COMMIT=0
 
@@ -55,11 +59,13 @@ else
 		
 		echo "This is a tag commit with tag $GIT_LAST_TAG"
 		printf $GIT_LAST_TAG > $META_FILE_TAG
+		GIT_FULL_VERSION="$GIT_LAST_TAG ($GIT_FULL_VERSION)"
 	fi
 fi
 
 # print the tag information
 printf $IS_TAG_COMMIT > $META_FILE_IS_TAG
+printf $GIT_FULL_VERSION > $META_FILE_FULL_VERSION
 
 # prefer the tag as version information
 if [ -e $META_FILE_TAG ]; then

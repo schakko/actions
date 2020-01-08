@@ -26,7 +26,15 @@ META_FILE_FULL_VERSION=$GIT_META_DIRECTORY/full_version
 GIT_FILE_HASH=`git rev-parse HEAD`
 printf $GIT_FILE_HASH > $META_FILE_HASH
 
-BRANCH_INFO=`git status -b -s`
+# get the name of the current branch, even if we are in detached state (e.g. if this is a Jenkins checkout)
+# @see https://stackoverflow.com/a/37890564
+BRANCH_INFO=$(git rev-parse --abbrev-ref HEAD)
+
+# if BRANCH_INFO is empty (current HEAD is detached after a Jenkins checkout)
+# @see https://stackoverflow.com/a/6064223
+if [[ "$BRANCH_INFO" != "x" ]]; then
+	BRANCH_INFO=`git show -s --pretty=%D HEAD | tr -s ', ' '\n' | grep -v HEAD | head -n1`
+fi
 
 # this is only relevant if we are using GitHub Actions; otherwise ignore this
 if [ ! -z "$GITHUB_REF" ]; then
@@ -36,7 +44,8 @@ fi
 
 # get the last part of of the branch info (e.g. "master...origin/master" for git status or "refs/heads/master") and extract the last portion
 # @see https://stackoverflow.com/a/22727211
-printf `echo $BRANCH_INFO | rev | cut -d'/' -f 1 | rev` > $META_FILE_BRANCH
+BRANCH_INFO=`echo $BRANCH_INFO | rev | cut -d'/' -f 1 | rev`
+printf $BRANCH_INFO > $META_FILE_BRANCH
 
 # get the last commit message
 GIT_LAST_MESSAGE=$(git log -1 --pretty=oneline)
